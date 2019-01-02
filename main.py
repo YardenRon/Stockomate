@@ -7,4 +7,3 @@ simfin = SimFin()
 meta = MetaData(6, "ttm", "eq")
 objects = [SearchObject("4-14", meta, None)]
 response = simfin.find(objects, 0)
-print("finish")

@@ -22,4 +22,3 @@ from .simfin import SimFin
 from .search_object import SearchObject
 from .condition import Condition
 from .meta_data import MetaData
-from .complex_json_encoder import ComplexEncoder

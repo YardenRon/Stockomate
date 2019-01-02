@@ -1,3 +1,5 @@
+SIMFIN_API_KEY = 'JE3EmpPi7AURqgRggGBZVvCok3Leec60'
+
 INDICATORS_TO_IDS = {
     "Number of Employees": "0-3",
     "Founding Year": "0-5",

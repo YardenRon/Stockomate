@@ -1,5 +1,6 @@
 import os
 import requests
+from .config import SIMFIN_API_KEY
 
 # SIMFIN_API_KEY = os.environ.get('SIMFIN_API_KEY', None)
 
@@ -12,7 +13,6 @@ import requests
 #         "https://simfin.com/data/access/api "
 #         "for how to retrieve an authentication token from SimFin"
 #     )
-SIMFIN_API_KEY = 'JE3EmpPi7AURqgRggGBZVvCok3Leec60' #TODO: get from config file
 
 session = requests.Session()
 session.params = {}

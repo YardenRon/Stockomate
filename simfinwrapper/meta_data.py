@@ -1,5 +1,3 @@
-import json
-
 class MetaData:
 
     def __init__(self, value, id = 6, operator = "eq"):

@@ -3,7 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="66103296-0765-4258-a6b5-96c5546e18dd" name="Default Changelist" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main.py" afterPath="$PROJECT_DIR$/main.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/simfinwrapper/__init__.py" afterPath="$PROJECT_DIR$/simfinwrapper/__init__.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/simfinwrapper/meta_data.py" afterPath="$PROJECT_DIR$/simfinwrapper/meta_data.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/simfinwrapper/search_object.py" afterPath="$PROJECT_DIR$/simfinwrapper/search_object.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/simfinwrapper/simfin.py" afterPath="$PROJECT_DIR$/simfinwrapper/simfin.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -14,7 +15,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/Stockomate$main.coverage" NAME="main Coverage Results" MODIFIED="1546469342878" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Stockomate$main.coverage" NAME="main Coverage Results" MODIFIED="1546469800414" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
@@ -22,8 +23,8 @@
       <file leaf-file-name="simfin.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/simfinwrapper/simfin.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="431">
-              <caret line="22" column="30" lean-forward="true" selection-start-line="22" selection-start-column="30" selection-end-line="22" selection-end-column="30" />
+            <state relative-caret-position="29">
+              <caret line="14" column="55" lean-forward="false" selection-start-line="14" selection-start-column="55" selection-end-line="14" selection-end-column="55" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
               </folding>
@@ -34,8 +35,8 @@
       <file leaf-file-name="search_object.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/simfinwrapper/search_object.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="189">
-              <caret line="9" column="45" lean-forward="true" selection-start-line="9" selection-start-column="45" selection-end-line="9" selection-end-column="45" />
+            <state relative-caret-position="168">
+              <caret line="8" column="34" lean-forward="true" selection-start-line="8" selection-start-column="34" selection-end-line="8" selection-end-column="34" />
               <folding />
             </state>
           </provider>
@@ -54,8 +55,8 @@
       <file leaf-file-name="main.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="240">
-              <caret line="8" column="34" lean-forward="false" selection-start-line="8" selection-start-column="34" selection-end-line="8" selection-end-column="34" />
+            <state relative-caret-position="180">
+              <caret line="6" column="31" lean-forward="false" selection-start-line="6" selection-start-column="31" selection-end-line="6" selection-end-column="31" />
               <folding>
                 <element signature="e#0#32#0" expanded="true" />
               </folding>
@@ -88,8 +89,8 @@
       <file leaf-file-name="condition.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/simfinwrapper/condition.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="168">
-              <caret line="8" column="46" lean-forward="false" selection-start-line="8" selection-start-column="46" selection-end-line="8" selection-end-column="46" />
+            <state relative-caret-position="84">
+              <caret line="4" column="32" lean-forward="true" selection-start-line="4" selection-start-column="32" selection-end-line="4" selection-end-column="32" />
               <folding />
             </state>
           </provider>
@@ -98,8 +99,8 @@
       <file leaf-file-name="meta_data.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/simfinwrapper/meta_data.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="231">
-              <caret line="11" column="24" lean-forward="false" selection-start-line="11" selection-start-column="24" selection-end-line="11" selection-end-column="24" />
+            <state relative-caret-position="147">
+              <caret line="7" column="26" lean-forward="false" selection-start-line="7" selection-start-column="21" selection-end-line="7" selection-end-column="26" />
               <folding />
             </state>
           </provider>
@@ -125,12 +126,12 @@
         <option value="$PROJECT_DIR$/session.py" />
         <option value="$PROJECT_DIR$/simFinWrapper.py" />
         <option value="$PROJECT_DIR$/meta_data.py" />
-        <option value="$PROJECT_DIR$/simfinwrapper/meta_data.py" />
         <option value="$PROJECT_DIR$/simfinwrapper/condition.py" />
         <option value="$PROJECT_DIR$/simfinwrapper/complex_json_encoder.py" />
-        <option value="$PROJECT_DIR$/simfinwrapper/search_object.py" />
-        <option value="$PROJECT_DIR$/simfinwrapper/simfin.py" />
         <option value="$PROJECT_DIR$/simfinwrapper/__init__.py" />
+        <option value="$PROJECT_DIR$/simfinwrapper/meta_data.py" />
+        <option value="$PROJECT_DIR$/simfinwrapper/simfin.py" />
+        <option value="$PROJECT_DIR$/simfinwrapper/search_object.py" />
         <option value="$PROJECT_DIR$/main.py" />
       </list>
     </option>
@@ -462,7 +463,7 @@
           </properties>
         </breakpoint>
       </default-breakpoints>
-      <option name="time" value="7" />
+      <option name="time" value="8" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -599,26 +600,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/simfinwrapper/search_object.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="189">
-          <caret line="9" column="45" lean-forward="true" selection-start-line="9" selection-start-column="45" selection-end-line="9" selection-end-column="45" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/simfinwrapper/meta_data.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="231">
-          <caret line="11" column="24" lean-forward="false" selection-start-line="11" selection-start-column="24" selection-end-line="11" selection-end-column="24" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/simfinwrapper/condition.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="168">
-          <caret line="8" column="46" lean-forward="false" selection-start-line="8" selection-start-column="46" selection-end-line="8" selection-end-column="46" />
+        <state relative-caret-position="84">
+          <caret line="4" column="32" lean-forward="true" selection-start-line="4" selection-start-column="32" selection-end-line="4" selection-end-column="32" />
           <folding />
         </state>
       </provider>
@@ -641,20 +626,36 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/simfinwrapper/meta_data.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="147">
+          <caret line="7" column="26" lean-forward="false" selection-start-line="7" selection-start-column="21" selection-end-line="7" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/simfinwrapper/simfin.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="431">
-          <caret line="22" column="30" lean-forward="true" selection-start-line="22" selection-start-column="30" selection-end-line="22" selection-end-column="30" />
+        <state relative-caret-position="29">
+          <caret line="14" column="55" lean-forward="false" selection-start-line="14" selection-start-column="55" selection-end-line="14" selection-end-column="55" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/simfinwrapper/search_object.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="168">
+          <caret line="8" column="34" lean-forward="true" selection-start-line="8" selection-start-column="34" selection-end-line="8" selection-end-column="34" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="8" column="34" lean-forward="false" selection-start-line="8" selection-start-column="34" selection-end-line="8" selection-end-column="34" />
+        <state relative-caret-position="180">
+          <caret line="6" column="31" lean-forward="false" selection-start-line="6" selection-start-column="31" selection-end-line="6" selection-end-column="31" />
           <folding>
             <element signature="e#0#32#0" expanded="true" />
           </folding>

@@ -12,7 +12,7 @@ class SimFin:
         response = session.get(url)
         return response.json()
 
-    def find(self, search_objects, results_per_page):
+    def find(self, search_objects, results_per_page = 0):
         url = self.base_url + 'finder'
         data = {
             "search": search_objects,

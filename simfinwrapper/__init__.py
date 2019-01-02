@@ -19,3 +19,6 @@ session.params = {}
 session.params['api-key'] = SIMFIN_API_KEY
 
 from .simfin import SimFin
+from .search_object import SearchObject
+from .condition import Condition
+from .meta_data import MetaData

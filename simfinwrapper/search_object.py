@@ -3,7 +3,6 @@ from .meta_data import MetaData
 class SearchObject:
 
     def __init__(self, indicator_id, meta = MetaData("ttm"), condition = None):
-        print("Search Object constructor")
         self.indicator_id = indicator_id
         self.meta = meta
         self.condition = condition

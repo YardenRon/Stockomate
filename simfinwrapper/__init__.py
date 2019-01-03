@@ -1,4 +1,3 @@
-import os
 import requests
 from .config import SIMFIN_API_KEY
 

@@ -1,7 +1,6 @@
 class MetaData:
 
     def __init__(self, value, id = 6, operator = "eq"):
-        print("MetaData constructor")
         self.id = id
         self.value = value
         self.operator = operator

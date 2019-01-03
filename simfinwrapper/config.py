@@ -1,5 +1,11 @@
 SIMFIN_API_KEY = 'JE3EmpPi7AURqgRggGBZVvCok3Leec60'
 
+SIMFIN_API = {
+    "base_url": "https://simfin.com/api/v1/",
+    "companies_details": "info/all-entities",
+    "find": "finder"
+}
+
 INDICATORS_TO_IDS = {
     "Number of Employees": "0-3",
     "Founding Year": "0-5",

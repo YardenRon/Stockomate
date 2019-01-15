@@ -10,4 +10,4 @@ class SearchObject:
     #TODO: Add function according_to_ttm(ttm) where ttm is the number of years back
 
     def to_json(self):
-        return dict(indicatorId = self.indicator_id, meta = self.meta, condition = self.condition)
+        return dict(indicatorId = self.indicator_id, meta = [self.meta], condition = self.condition)

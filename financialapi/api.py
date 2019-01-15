@@ -1,3 +1,4 @@
+import json
 from . import simfin, SearchObject, MetaData, INDICATORS_TO_IDS as INDICATORS
 
 class FinancialApi:
@@ -7,7 +8,8 @@ class FinancialApi:
 
     def get_valuation_metrics(self, metrics):
         search_objects = self.__create_search_objects(metrics)
-        return simfin.find(search_objects)
+        response = simfin.find(search_objects)
+        return self.__decode_json_results(response.results)
 
     def __create_search_objects(self, metrics):
         search_objects = []
@@ -19,3 +21,7 @@ class FinancialApi:
             search_objects.append(search_object)
 
         return search_objects
+
+    def __decode_json_results(self, results_json):
+        test = json.loads(results_json)
+        print("hello")

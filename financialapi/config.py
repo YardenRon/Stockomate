@@ -1,22 +1,22 @@
 DATA_TO_RETRIEVE = [
     {
-        "indicator": "Price to Earnings Ratio",
+        "indicator": "Earnings per Share, Basic",
         "period": "ttm"
     },
     {
-        "indicator": "Price to Earnings Ratio",
+        "indicator": "Earnings per Share, Basic",
         "period": "ttm-1"
     },
     {
-        "indicator": "Price to Earnings Ratio",
+        "indicator": "Earnings per Share, Basic",
         "period": "ttm-2"
     },
     {
-        "indicator": "Price to Earnings Ratio",
+        "indicator": "Earnings per Share, Basic",
         "period": "ttm-3"
     },
     {
-        "indicator": "Price to Earnings Ratio",
+        "indicator": "Earnings per Share, Basic",
         "period": "ttm-4"
     }
 ]

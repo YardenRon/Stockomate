@@ -1,10 +1,10 @@
 from mongoengine import *
 from .company import Company
-from .metric_value import MetricValue
+from .metric import Metric
 
 class Run(Document):
 
     id = StringField(required=True)
     company = ReferenceField(Company)
-    metricsValues = ListField(EmbeddedDocumentField(MetricValue))
+    metrics_values = ListField(EmbeddedDocumentField(Metric))
     timestamp = DateTimeField()

@@ -11,16 +11,27 @@
 
 # *** 2 ***
 
-# from financialapi import FinancialApi, DATA_TO_RETRIEVE as METRICS
-#
-# api = FinancialApi()
-# response = api.get_valuation_metrics(METRICS)
+from financialapi import FinancialApi, DATA_TO_RETRIEVE as METRICS
+from dal import *
+import time
+
+db = MongoDB()
+api = FinancialApi()
+start_time = time.time()
+companies = api.get_companies_valuation_metrics(METRICS)
+db.save_companies(companies)
+print("--- %s seconds ---" % (time.time() - start_time))
+print("hello")
 
 # *** 2 ***
 
-from dal import *
-from simfinwrapper import INDICATORS_TO_IDS as INDICATORS
-db = MongoDB()
-metrics_names = INDICATORS.keys()
-db.save_metrics(metrics_names)
-print("hello")
+# *** 3 ***
+
+# from dal import *
+# from simfinwrapper import INDICATORS_TO_IDS as INDICATORS
+# db = MongoDB()
+# metrics_names = INDICATORS.keys()
+# db.save_metrics(metrics_names)
+# print("hello")
+
+# *** 3 ***

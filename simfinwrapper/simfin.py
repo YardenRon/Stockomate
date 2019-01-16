@@ -7,7 +7,7 @@ from .config import SIMFIN_API
 class SimFin:
 
     def __init__(self):
-        self.base_url = SIMFIN_API["base_url"];
+        self.base_url = SIMFIN_API["base_url"]
 
     def get_companies_details(self):
         url = self.base_url + SIMFIN_API["companies_details"]

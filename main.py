@@ -1,3 +1,5 @@
+# *** 1 ***
+
 # from simfinwrapper import SimFin, SearchObject, INDICATORS_TO_IDS as INDICATORS
 
 # simfin = SimFin()
@@ -5,8 +7,18 @@
 # objects = [SearchObject(INDICATORS["Price to Earnings Ratio"])]
 # response = simfin.find(objects)
 
-from financialapi import FinancialApi, DATA_TO_RETRIEVE as METRICS
+# *** 1 ***
 
-api = FinancialApi()
-response = api.get_valuation_metrics(METRICS)
+# *** 2 ***
+
+# from financialapi import FinancialApi, DATA_TO_RETRIEVE as METRICS
+#
+# api = FinancialApi()
+# response = api.get_valuation_metrics(METRICS)
+
+# *** 2 ***
+
+from dal import *
+metric = Metric(name = "Price to Earnings Test", period = "TTM")
+metric.save()
 print("hello")

@@ -19,6 +19,8 @@
 # *** 2 ***
 
 from dal import *
-metric = Metric(name = "Price to Earnings Test", period = "TTM")
-metric.save()
+from simfinwrapper import INDICATORS_TO_IDS as INDICATORS
+db = MongoDB()
+metrics_names = INDICATORS.keys()
+db.save_metrics(metrics_names)
 print("hello")

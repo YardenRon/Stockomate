@@ -4,8 +4,8 @@ from . import formatter
 
 class FinancialApi:
 
-    def __init__(self):
-        print("constructor")
+    def get_company_share_prices(self, simfin_id):
+        return simfin.get_company_share_price(simfin_id)
 
     def get_companies_valuation_metrics(self, metrics):
         search_objects = self.__create_search_objects(metrics)

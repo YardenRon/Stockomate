@@ -11,17 +11,17 @@
 
 # *** 2 ***
 
-from financialapi import FinancialApi, DATA_TO_RETRIEVE as METRICS
-from dal import *
-import time
-
-db = MongoDB()
-api = FinancialApi()
-start_time = time.time()
-companies = api.get_companies_valuation_metrics(METRICS)
-db.save_companies(companies)
-print("--- %s seconds ---" % (time.time() - start_time))
-print("hello")
+# from financialapi import FinancialApi, DATA_TO_RETRIEVE as METRICS
+# from dal import *
+# import time
+#
+# db = MongoDB()
+# api = FinancialApi()
+# start_time = time.time()
+# companies = api.get_companies_valuation_metrics(METRICS)
+# db.save_companies(companies)
+# print("--- %s seconds ---" % (time.time() - start_time))
+# print("hello")
 
 # *** 2 ***
 
@@ -35,3 +35,11 @@ print("hello")
 # print("hello")
 
 # *** 3 ***
+
+# *** 4 ***
+from financialapi import FinancialApi
+api = FinancialApi()
+result = api.get_company_share_prices(111052)
+print("hello")
+
+# *** 4 ***

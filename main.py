@@ -38,8 +38,13 @@
 
 # *** 4 ***
 from financialapi import FinancialApi
+
+ids = [111052, 61595, 83548, 59265]
+
 api = FinancialApi()
-result = api.get_company_share_prices(111052)
-print("hello")
+
+for id in ids:
+    company_prices = api.get_company_share_prices(id)
+    print("hello")
 
 # *** 4 ***

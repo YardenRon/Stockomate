@@ -20,8 +20,8 @@ class Formatter:
             metrics.append(metric)
         return metrics
 
-    def __create_company_object(self, simfinId,name, metrics_values):
-        company = Company(simfinId=simfinId, name=name)
+    def __create_company_object(self, simfin_id, name, metrics_values):
+        company = Company(simfinId=simfin_id, name=name)
         company.metrics_values = copy.deepcopy(metrics_values)
         company.last_updated = datetime.datetime.now()
         return company
@@ -32,3 +32,16 @@ class Formatter:
             value = company_result['values'][index]['value']
             metric.value = value
 
+    def convert_to_company_prices_object(self, request_results, requested_id):
+        company_prices = CompanyPrices(simfinId=requested_id)
+
+        prices = []
+        for result in request_results:
+            converted_datetime = datetime.strptime(result['date'], '%Y-%m-%d')
+            share_price = SharePrice(date=converted_datetime, price=result['closeAdj'])
+            prices.append(share_price)
+
+        company_prices.prices = prices
+
+        company_prices.last_updated = datetime.datetime.now()
+        return company_prices

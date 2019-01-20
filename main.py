@@ -38,13 +38,16 @@
 
 # *** 4 ***
 from financialapi import FinancialApi
+from dal import *
 
 ids = [111052, 61595, 83548, 59265]
 
+db = MongoDB()
 api = FinancialApi()
 
 for id in ids:
     company_prices = api.get_company_share_prices(id)
+    db.save_company_prices(company_prices)
     print("hello")
 
 # *** 4 ***

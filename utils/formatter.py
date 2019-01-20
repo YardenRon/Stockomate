@@ -37,7 +37,7 @@ class Formatter:
 
         prices = []
         for result in request_results:
-            converted_datetime = datetime.strptime(result['date'], '%Y-%m-%d')
+            converted_datetime = datetime.datetime.strptime(result['date'], '%Y-%m-%d')
             share_price = SharePrice(date=converted_datetime, price=result['closeAdj'])
             prices.append(share_price)
 

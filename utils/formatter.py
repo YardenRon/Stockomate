@@ -8,7 +8,7 @@ class Formatter:
         metrics = self.__create_metrics_objects_without_value(requested_data)
         for result in request_results:
             self.__add_values_to_metrics(requested_data, metrics, result)
-            company = self.__create_company_object(result['name'], metrics)
+            company = self.__create_company_object(result['simId'], result['name'], metrics)
             companies.append(company)
 
         return companies
@@ -20,8 +20,8 @@ class Formatter:
             metrics.append(metric)
         return metrics
 
-    def __create_company_object(self, name, metrics_values):
-        company = Company(name=name)
+    def __create_company_object(self, simfinId,name, metrics_values):
+        company = Company(simfinId=simfinId, name=name)
         company.metrics_values = copy.deepcopy(metrics_values)
         company.last_updated = datetime.datetime.now()
         return company

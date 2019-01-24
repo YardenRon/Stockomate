@@ -2,6 +2,8 @@ import json
 from . import simfin, SearchObject, MetaData, INDICATORS_TO_IDS as INDICATORS
 from . import formatter
 
+# TODO: Add logs to functions
+
 class FinancialApi:
 
     def get_company_share_prices(self, simfin_id):

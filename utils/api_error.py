@@ -1,3 +1,5 @@
+from utils.logger import logger
+
 class ApiError(Exception):
 
     def __init__(self, url, status):
@@ -5,4 +7,6 @@ class ApiError(Exception):
         self.status = status
 
     def __str__(self):
-        return "ApiError: url={}, status={}".format(self.url, self.status)
+        message = "ApiError: url={}, status={}".format(self.url, self.status)
+        logger.exception(message)
+        return message

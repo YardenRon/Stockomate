@@ -1,4 +1,5 @@
 import requests
+
 from .config import SIMFIN_API_KEY
 
 session = requests.Session()
@@ -7,7 +8,7 @@ session.params = {
 }
 
 from .simfin import SimFin
-from .search_object import SearchObject
-from .condition import Condition
-from .meta_data import MetaData
+from simfinwrapper.model.search_object import SearchObject
+from simfinwrapper.model.condition import Condition
+from simfinwrapper.model.meta_data import MetaData
 from .config import INDICATORS_TO_IDS

@@ -1,8 +1,10 @@
 import json
+
+from utils.api_error import ApiError
+from utils.complex_json_encoder import ComplexEncoder
 from . import session
-from .complex_json_encoder import ComplexEncoder
-from .api_error import ApiError
 from .config import SIMFIN_API
+
 
 class SimFin:
 

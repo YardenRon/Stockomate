@@ -1,4 +1,4 @@
-from .meta_data import MetaData
+from simfinwrapper.model.meta_data import MetaData
 
 class SearchObject:
 

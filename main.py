@@ -38,17 +38,26 @@
 
 # *** 4 ***
 
-from financialapi import FinancialApi
-from dal import *
-
-# ids = [111052, 61595, 83548, 59265]
-ids = [59265]
-
-db = MongoDB()
-api = FinancialApi()
-
-for id in ids:
-    company_prices = api.get_company_share_prices(id)
-    db.save_company_prices(company_prices)
+# from financialapi import FinancialApi
+# from dal import *
+#
+# # ids = [111052, 61595, 83548, 59265]
+# ids = [59265]
+#
+# db = MongoDB()
+# api = FinancialApi()
+#
+# for id in ids:
+#     company_prices = api.get_company_share_prices(id)
+#     db.save_company_prices(company_prices)
 
 # *** 4 ***
+
+# *** 5 ***
+
+from valuation import *
+
+model = PEModel(111052)
+
+# *** 5 ***
+

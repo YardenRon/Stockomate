@@ -15,3 +15,8 @@ class MongoDB:
         company_prices.save()
         self.logger.debug("Company share prices saved to the DB")
 
+    def get_company(self, simfin_id):
+        return Company.objects.get(simfinId = simfin_id)
+
+    def get_company_prices(self, simfin_id):
+        return CompanyPrices.objects.get(simfinId= simfin_id)

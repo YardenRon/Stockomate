@@ -19,4 +19,4 @@ class MongoDB:
         return Company.objects.get(simfinId = simfin_id)
 
     def get_company_prices(self, simfin_id):
-        return CompanyPrices.objects.get(simfinId= simfin_id)
+        return CompanyPrices.objects.get(simfinId = simfin_id)

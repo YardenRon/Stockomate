@@ -38,11 +38,11 @@
 
 # *** 4 ***
 
-# from financialapi import FinancialApi
-# from dal import *
-#
-# # ids = [111052, 61595, 83548, 59265]
-# ids = [59265]
+from financialapi import FinancialApi
+from dal import *
+
+# ids = [111052, 61595, 83548, 59265]
+# ids = [111052]
 #
 # db = MongoDB()
 # api = FinancialApi()

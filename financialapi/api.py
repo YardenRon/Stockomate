@@ -6,6 +6,10 @@ from . import formatter
 
 class FinancialApi:
 
+    def get_companies_details(self):
+        response = simfin.get_companies_details()
+        return response
+
     def get_company_share_prices(self, simfin_id):
         response = simfin.get_company_share_price(simfin_id)
         return self.__decode_prices_json_results(response['priceData'], simfin_id)

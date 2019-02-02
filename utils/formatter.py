@@ -45,3 +45,13 @@ class Formatter:
 
         company_prices.last_updated = datetime.datetime.now()
         return company_prices
+
+    def convert_companies_details_to_dict(self, companies_details):
+        simfin_id_to_ticker = {}
+
+        for company_details in companies_details:
+            id = company_details['simId']
+            ticker = company_details['ticker']
+            simfin_id_to_ticker[id] = ticker
+
+        return simfin_id_to_ticker

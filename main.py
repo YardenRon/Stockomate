@@ -11,17 +11,23 @@
 
 # *** 2 ***
 
-# from financialapi import FinancialApi, DATA_TO_RETRIEVE as METRICS
-# from dal import *
-# import time
-#
-# db = MongoDB()
-# api = FinancialApi()
-# start_time = time.time()
-# companies = api.get_companies_valuation_metrics(METRICS)
-# db.save_companies(companies)
-# print("--- %s seconds ---" % (time.time() - start_time))
-# print("hello")
+from financialapi import FinancialApi, DATA_TO_RETRIEVE as METRICS
+from dal import *
+from utils.formatter import Formatter
+import time
+
+db = MongoDB()
+api = FinancialApi()
+formatter = Formatter()
+start_time = time.time()
+companies_details = api.get_companies_details()
+id_to_ticker = formatter.convert_companies_details_to_dict(companies_details)
+companies = api.get_companies_valuation_metrics(METRICS)
+for company in companies:
+    company.ticker = id_to_ticker[company.simfinId]
+db.save_companies(companies)
+print("--- %s seconds ---" % (time.time() - start_time))
+print("hello")
 
 # *** 2 ***
 
@@ -55,9 +61,9 @@ from dal import *
 
 # *** 5 ***
 
-from valuation import *
-
-model = PEModel(111052)
+# from valuation import *
+#
+# model = PEModel(111052)
 
 # *** 5 ***
 

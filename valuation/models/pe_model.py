@@ -1,12 +1,15 @@
 from .valuation_model import ValuationModel
 from ..data_extractor import *
 from scraper.yahoo_scraper import YahooScraper
+from ..config import *
 import datetime
+import logging
 
 class PEModel(ValuationModel):
 
     def __init__(self, simfin_id ,years_back = 5):
         super().__init__(simfin_id)
+        self.logger = logging.getLogger('app.pe')
         self.earnings_per_share = []
         self.price_per_share = []
         self.expected_growth_rate = 1
@@ -14,6 +17,7 @@ class PEModel(ValuationModel):
         self.prepare_model_input(self.company_id, self.years_back)
 
     def prepare_model_input(self, company_id, years_back):
+        self.logger.debug("Preparing P/E model inputs for company [%d]", self.company_id)
         company = get_company_from_db(company_id)
         company_prices = get_company_prices_from_db(company_id)
         self.earnings_per_share = self.__get_earnings_per_share(company, years_back)
@@ -40,20 +44,20 @@ class PEModel(ValuationModel):
 
     def __get_last_years_dates(self, current_date, years_back):
         cleared_current_date = current_date.replace(hour=0, minute=0, second=0, microsecond=0)
-        cleared_current_date = self.__change_weekend_to_middle_of_week(cleared_current_date)
+        cleared_current_date = self.__change_weekend_to_middle_of_week(cleared_current_date, -3)
         last_years_dates = [cleared_current_date]
 
         for year in range(1, years_back):
             years_ago_date = cleared_current_date - datetime.timedelta(days=year*365)
-            years_ago_date = self.__change_weekend_to_middle_of_week(years_ago_date)
+            years_ago_date = self.__change_weekend_to_middle_of_week(years_ago_date, 3)
             last_years_dates.append(years_ago_date)
 
         return last_years_dates
 
-    def __change_weekend_to_middle_of_week(self, date):
+    def __change_weekend_to_middle_of_week(self, date, days_delta):
         is_sunday_or_saturday = date.weekday() == 5 or date.weekday() == 6
         if is_sunday_or_saturday:
-            date = date + datetime.timedelta(days=3)
+            date = date + datetime.timedelta(days=days_delta)
         return date
 
 
@@ -62,4 +66,31 @@ class PEModel(ValuationModel):
         return scraper.get_company_expected_growth_rate(ticker)
 
     def run(self):
-        print("Hello")
+        self.logger.debug("Running P/E model algorithm on company [%d]", self.company_id)
+        avg_pe = self.__calculate_avg_historical_pe(self.price_per_share,
+                                                    self.earnings_per_share,
+                                                    self.years_back)
+        eps_ttm = self.earnings_per_share[0].value
+        conservative_growth_rate = self.expected_growth_rate * (1-MARGIN_OF_SAFETY)
+        future_eps = self.__project_eps_to_future(eps_ttm, conservative_growth_rate, self.years_back)
+        # The price of the company x-years from now
+        target_price = future_eps * avg_pe
+        # Net Present Value - how much the company worth TODAY
+        npv = target_price / pow(1+DISCOUNT_RATE, self.years_back)
+        self.logger.debug("P/E model algorithm on company [%d] result=%f", self.company_id, npv)
+        return npv
+
+    def __calculate_avg_historical_pe(self, price_per_share, earnings_per_share, years_back):
+        sum_pe = 0
+        for year in range(years_back):
+            sum_pe += price_per_share[year].price / earnings_per_share[year].value
+        return sum_pe/years_back
+
+    def __project_eps_to_future(self, eps_ttm, conservative_growth_rate, years_ahead):
+        eps_growth = eps_ttm
+        for year in range(1, years_ahead+1):
+            declined_conservative_growth_rate = \
+                conservative_growth_rate* pow(1-GROWTH_DECLINE_RATE, year-1)
+            eps_growth *= (1+declined_conservative_growth_rate)
+        return eps_growth
+

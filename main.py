@@ -44,11 +44,11 @@
 
 # *** 4 ***
 
-from financialapi import FinancialApi
-from dal import *
-
+# from financialapi import FinancialApi
+# from dal import *
+#
 # ids = [111052, 61595, 83548, 59265]
-# ids = [111052]
+# ids = [83548]
 #
 # db = MongoDB()
 # api = FinancialApi()
@@ -63,7 +63,8 @@ from dal import *
 
 from valuation import *
 
-model = PEModel(111052)
+model = PEModel(83548)
+model.run()
 
 # *** 5 ***
 

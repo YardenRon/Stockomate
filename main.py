@@ -61,10 +61,15 @@
 
 # *** 5 ***
 
-from valuation import *
-
-model = PEModel(83548)
-model.run()
+# from valuation import *
+#
+# model = PEModel(83548)
+# model.run()
 
 # *** 5 ***
+
+from cli.cli import CLI
+
+test = CLI()
+test.run()
 

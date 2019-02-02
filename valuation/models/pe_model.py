@@ -1,5 +1,6 @@
 from .valuation_model import ValuationModel
 from ..data_extractor import *
+from scraper.yahoo_scraper import YahooScraper
 import datetime
 
 class PEModel(ValuationModel):
@@ -19,7 +20,7 @@ class PEModel(ValuationModel):
         self.price_per_share = self.__get_price_per_share(company_prices,
                                                           company.last_updated,
                                                           years_back)
-        self.expected_growth_rate = self.__get_expected_growth_rate()
+        self.expected_growth_rate = self.__get_expected_growth_rate(company.ticker)
 
     def __get_earnings_per_share(self, company_details, years_back):
         periods = self.__create_periods_array(years_back)
@@ -56,8 +57,9 @@ class PEModel(ValuationModel):
         return date
 
 
-    def __get_expected_growth_rate(self):
-        pass
+    def __get_expected_growth_rate(self, ticker):
+        scraper = YahooScraper()
+        return scraper.get_company_expected_growth_rate(ticker)
 
     def run(self):
         print("Hello")

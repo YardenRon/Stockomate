@@ -1,22 +1,33 @@
-COMMANDS = [
-    {
-        "number": 1,
-        "message": "Update all companies details and metrics"
+from .actions import *
+
+COMMANDS = {
+    1: {
+        "message": "Update all companies details and metrics",
+        "action": update_companies_details_and_metrics
     },
-    {
-        "number": 2,
-        "message": "Update specific companies prices"
+    2: {
+        "message": "Update specific companies prices",
+        "action": update_companies_prices
     },
-    {
-        "number": 3,
-        "message": "Run P/E model on specific company"
+    3: {
+        "message": "Run P/E model on specific companies",
+        "action": run_pe_model
     },
-    {
-        "number": 4,
-        "message": ""
+    4: {
+        "message": "Show last runs details",
+        "action": get_last_runs_details
     },
-    {
-        "number": 5,
-        "message": ""
+    5: {
+        "message": "Show runs details ordered by yield",
+        "action": get_runs_details_order_by_yield
+    },
+    6: {
+        "message": "Show runs details of specific company",
+        "action": get_runs_details_by_company
+    },
+    7: {
+        "message": "Exit"
     }
-]
+}
+
+EXIT_COMMAND = 7

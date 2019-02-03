@@ -9,15 +9,15 @@ class CLI:
     def run(self):
         chose_exit = False
         while not chose_exit:
-            self.__print_commands_messages()
+            self.__print_commands_definitions()
             chosen_command_string = input()
             chosen_command = int(chosen_command_string)
             chose_exit = self.__execute_command(chosen_command)
 
-    def __print_commands_messages(self):
+    def __print_commands_definitions(self):
         print("Please choose a command to execute:")
         for number, command in COMMANDS.items():
-            print("%d - %s" % (number, command['message']))
+            print("%d - %s" % (number, command['definition']))
 
     def __execute_command(self, command):
         is_valid_command = isinstance(command, int) and \

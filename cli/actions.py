@@ -91,13 +91,20 @@ def run_pe_model():
                      % (time.time() - start_time))
 
 def get_last_runs_details():
-    print("Inside function (get_last_runs_details)")
+    runs_details = db.get_last_runs_details()
 
 def get_runs_details_order_by_yield():
-    print("Inside function (get_runs_details_order_by_yield)")
+    runs_details = db.get_all_runs_details_ordered_by_yield()
 
 def get_runs_details_by_company():
-    print("Inside function (get_runs_details_by_company)")
+    print("Please write the company id you wish to view:")
+    user_input = input()
+
+    if not user_input.strip().isdigit():
+        print("The id is not valid")
+    else:
+        company_id = int(user_input)
+        runs_details = db.get_company_runs_details(company_id)
 
 def __parse_ids_string(string):
     return [int(_id) for _id in string.split(',') if _id.strip().isdigit()]

@@ -12,3 +12,7 @@ class ValuationModel(ABC):
     @abstractmethod
     def run(self):
         pass
+
+    @abstractmethod
+    def save_run_details_to_db(self, *args):
+        pass

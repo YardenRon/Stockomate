@@ -1,5 +1,6 @@
 from .valuation_model import ValuationModel
 from ..data_extractor import *
+from dal import ModelInput, Run
 from scraper.yahoo_scraper import YahooScraper
 from ..config import *
 import datetime
@@ -10,6 +11,7 @@ class PEModel(ValuationModel):
     def __init__(self, simfin_id ,years_back = 5):
         super().__init__(simfin_id)
         self.logger = logging.getLogger('app.pe')
+        self.company_name = ""
         self.earnings_per_share = []
         self.price_per_share = []
         self.expected_growth_rate = 1
@@ -20,6 +22,7 @@ class PEModel(ValuationModel):
         self.logger.debug("Preparing P/E model inputs for company [%d]", self.company_id)
         company = get_company_from_db(company_id)
         company_prices = get_company_prices_from_db(company_id)
+        self.company_name = company.name
         self.earnings_per_share = self.__get_earnings_per_share(company, years_back)
         self.price_per_share = self.__get_price_per_share(company_prices,
                                                           company.last_updated,
@@ -78,6 +81,10 @@ class PEModel(ValuationModel):
         # Net Present Value - how much the company worth TODAY
         npv = target_price / pow(1+DISCOUNT_RATE, self.years_back)
         self.logger.debug("P/E model algorithm on company [%d] result=%f", self.company_id, npv)
+        self.save_run_details_to_db(self.company_id, self.company_name, npv,
+                                    self.price_per_share[0].price, avg_pe, eps_ttm,
+                                    self.expected_growth_rate, MARGIN_OF_SAFETY,
+                                    DISCOUNT_RATE, GROWTH_DECLINE_RATE, self.years_back)
         return npv
 
     def __calculate_avg_historical_pe(self, price_per_share, earnings_per_share, years_back):
@@ -94,3 +101,30 @@ class PEModel(ValuationModel):
             eps_growth *= (1+declined_conservative_growth_rate)
         return eps_growth
 
+    # TODO: Refactor functions with a lot of arguments
+
+    def save_run_details_to_db(self, company_id, company_name, result, current_price,
+                               avg_pe, eps_ttm, egr, mos, dr, gdr, years_back):
+        model_inputs = self.__create_inputs_object(avg_pe, eps_ttm, egr, mos, dr, gdr, years_back)
+        run_details = self.__create_run_details_object(company_id, company_name,
+                                                       model_inputs, result, current_price)
+        db.save_run_details(run_details)
+
+    def __create_run_details_object(self, company_id, company_name, inputs, result, current_price):
+        run = Run(company_id=company_id, company_name=company_name, inputs=inputs,
+                  model_result=round(result,2), current_price=round(current_price,2))
+        run.model = "P/E model"
+        run.possible_yield = round((result-current_price)/current_price*100,2)
+        run.timestamp = datetime.datetime.now()
+        return run
+
+    def __create_inputs_object(self, avg_pe, eps_ttm, egr, mos, dr, gdr, years_back):
+        inputs = [
+            ModelInput(name="Avg Historical P/E - %s years back" % years_back, value=round(avg_pe,2)),
+            ModelInput(name="Earnings per Share - TTM", value=round(eps_ttm,2)),
+            ModelInput(name="Expected Growth Rate - Next 5 years", value=round(egr,2)),
+            ModelInput(name="Growth Decline Rate", value=round(gdr,2)),
+            ModelInput(name="Margin of Safety", value=round(mos,2)),
+            ModelInput(name="Discount Rate", value=round(dr,2)),
+        ]
+        return inputs

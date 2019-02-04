@@ -1,10 +1,13 @@
 from mongoengine import *
-from .company import Company
-from .metric import Metric
+from .model_input import ModelInput
 
 class Run(Document):
 
-    id = StringField(required=True, primary_key=True)
-    company = ReferenceField(Company)
-    metrics_values = ListField(EmbeddedDocumentField(Metric))
+    company_id = IntField()
+    company_name = StringField(max_length=100)
+    model = StringField(max_length=50)
+    inputs = ListField(EmbeddedDocumentField(ModelInput))
+    model_result = FloatField()
+    current_price = FloatField()
+    possible_yield = FloatField()
     timestamp = DateTimeField()

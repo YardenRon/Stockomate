@@ -18,5 +18,9 @@ DATA_TO_RETRIEVE = [
     {
         "indicator": "Earnings per Share, Basic",
         "period": "TTM-4"
+    },
+    {
+        "indicator": "Free Cash Flow",
+        "period": "TTM-4"
     }
 ]

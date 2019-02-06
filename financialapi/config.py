@@ -21,6 +21,10 @@ DATA_TO_RETRIEVE = [
     },
     {
         "indicator": "Free Cash Flow",
-        "period": "TTM-4"
+        "period": "TTM"
+    },
+    {
+        "indicator": "Common Shares Outstanding",
+        "period": "TTM"
     }
 ]

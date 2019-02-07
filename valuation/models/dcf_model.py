@@ -11,6 +11,7 @@ class DCFModel(ValuationModel):
         super().__init__(simfin_id)
         self.logger = logging.getLogger('app.dcf')
         self.company_name = ""
+        self.current_price = 1
         self.free_cash_flow = 1
         self.cash_and_cash_equivalents = 1
         self.long_term_debt = 1
@@ -22,7 +23,9 @@ class DCFModel(ValuationModel):
     def prepare_model_input(self, company_id):
         self.logger.debug("Preparing DCF model inputs for company [%d]", self.company_id)
         company = get_company_from_db(company_id)
+        company_prices = get_company_prices_from_db(company_id)
         self.company_name = company.name
+        self.current_price = company_prices.prices[0].price
         self.free_cash_flow = self.__get_free_cash_flow(company)
         self.cash_and_cash_equivalents = self.__get_cash_and_cash_equivalents(company)
         self.long_term_debt = self.__get_long_term_debt(company)
@@ -67,7 +70,12 @@ class DCFModel(ValuationModel):
         intrinsic_value = company_value / self.shares_outstanding
         self.logger.debug("DCF model algorithm on company [%d] result=%f",
                           self.company_id, intrinsic_value)
-        # self.save_run_details_to_db()
+        self.save_run_details_to_db(self.company_id, self.company_name, intrinsic_value,
+                                    self.current_price, self.free_cash_flow,
+                                    self.cash_and_cash_equivalents, self.long_term_debt,
+                                    self.shares_outstanding, self.expected_growth_rate,
+                                    MARGIN_OF_SAFETY, DISCOUNT_RATE, GROWTH_DECLINE_RATE,
+                                    LAST_YEAR_FCF_MULTIPLIER)
         return intrinsic_value
 
     # TODO: Think maybe to unite __project_fcf_to_future and __calculate_npv_fcf
@@ -91,9 +99,12 @@ class DCFModel(ValuationModel):
 
     # TODO: Refactor functions with a lot of arguments
 
-    def save_run_details_to_db(self):
-        model_inputs = self.__create_inputs_object()
-        run_details = self.__create_run_details_object()
+    def save_run_details_to_db(self, company_id, company_name, result, current_price, fcf,
+                               cce, ltd, shares_num, egr, mos, dr, gdr, last_year_multiplier):
+        model_inputs = self.__create_inputs_object(fcf, cce, ltd, shares_num, egr,
+                                                   mos, dr, gdr, last_year_multiplier)
+        run_details = self.__create_run_details_object(company_id, company_name,
+                                                       model_inputs, result, current_price)
         db.save_run_details(run_details)
 
     def __create_run_details_object(self, company_id, company_name, inputs, result, current_price):
@@ -104,13 +115,17 @@ class DCFModel(ValuationModel):
         run.timestamp = datetime.datetime.now()
         return run
 
-    def __create_inputs_object(self, avg_pe, eps_ttm, egr, mos, dr, gdr, years_back):
+    def __create_inputs_object(self, fcf, cce, ltd, shares_num, egr,
+                               mos, dr, gdr, last_year_multiplier):
         inputs = [
-            ModelInput(name="Avg Historical P/E - %s years back" % years_back, value=round(avg_pe,2)),
-            ModelInput(name="Earnings per Share - TTM", value=round(eps_ttm,2)),
+            ModelInput(name="Cash and Cash Equivalents - Last Statement", value=round(cce,2)),
+            ModelInput(name="Long Term Debt - Last Statement", value=round(ltd,2)),
+            ModelInput(name="Free Cash Value - Last Statement", value=round(fcf, 2)),
+            ModelInput(name="Shares Outstanding - Current", value=round(shares_num, 2)),
             ModelInput(name="Expected Growth Rate - Next 5 years", value=round(egr,2)),
             ModelInput(name="Growth Decline Rate", value=round(gdr,2)),
             ModelInput(name="Margin of Safety", value=round(mos,2)),
             ModelInput(name="Discount Rate", value=round(dr,2)),
+            ModelInput(name="Last Year FCF Multiplier", value=round(last_year_multiplier, 2))
         ]
         return inputs

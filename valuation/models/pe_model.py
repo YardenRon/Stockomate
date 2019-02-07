@@ -48,6 +48,8 @@ class PEModel(ValuationModel):
     def __get_last_years_dates(self, current_date, years_back):
         cleared_current_date = current_date.replace(hour=0, minute=0, second=0, microsecond=0)
         cleared_current_date = self.__change_weekend_to_middle_of_week(cleared_current_date, -3)
+        if cleared_current_date.date() == datetime.datetime.today().date():
+            cleared_current_date = cleared_current_date - datetime.timedelta(days=1)
         last_years_dates = [cleared_current_date]
 
         for year in range(1, years_back):

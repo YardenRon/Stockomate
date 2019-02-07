@@ -33,15 +33,15 @@ class DCFModel(ValuationModel):
 
     def __get_free_cash_flow(self, company_details):
         return list(filter(lambda metric: metric.name == "Free Cash Flow",
-                           company_details.metrics_values))[0]
+                           company_details.metrics_values))[0].value
 
     def __get_cash_and_cash_equivalents(self, company_details):
         return list(filter(lambda metric: metric.name == "Cash and Cash-equivalents",
-                           company_details.metrics_values))[0]
+                           company_details.metrics_values))[0].value
 
     def __get_long_term_debt(self, company_details):
         return list(filter(lambda metric: metric.name == "Non-current Debt",
-                           company_details.metrics_values))[0]
+                           company_details.metrics_values))[0].value
 
     def __get_expected_growth_rate(self, ticker):
         scraper = YahooScraper()
@@ -49,7 +49,7 @@ class DCFModel(ValuationModel):
 
     def __get_shares_outstanding(self, company_details):
         return list(filter(lambda metric: metric.name == "Common Shares Outstanding",
-                           company_details.metrics_values))[0]
+                           company_details.metrics_values))[0].value
 
     def run(self):
         self.logger.debug("Running DCF model algorithm on company [%d]", self.company_id)
@@ -61,7 +61,7 @@ class DCFModel(ValuationModel):
         # Returns array of NPV of the above values
         npv_fcf_values = self.__calculate_npv_fcf(future_fcf_values, self.years_to_project)
         total_npv_fcf = sum(npv_fcf_values)
-        last_year_mutiplied_fcf = total_npv_fcf[self.years_to_project-1] * LAST_YEAR_FCF_MULTIPLIER
+        last_year_mutiplied_fcf = npv_fcf_values[self.years_to_project-1] * LAST_YEAR_FCF_MULTIPLIER
         company_value = total_npv_fcf + last_year_mutiplied_fcf \
                         + self.cash_and_cash_equivalents - self.long_term_debt
         intrinsic_value = company_value / self.shares_outstanding

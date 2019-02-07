@@ -26,5 +26,13 @@ DATA_TO_RETRIEVE = [
     {
         "indicator": "Common Shares Outstanding",
         "period": "TTM"
+    },
+    {
+        "indicator": "Cash and Cash-equivalents",
+        "period": "TTM"
+    },
+    {
+        "indicator": "Non-current Debt",
+        "period": "TTM"
     }
 ]

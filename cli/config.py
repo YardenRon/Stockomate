@@ -14,20 +14,24 @@ COMMANDS = {
         "action": run_pe_model
     },
     4: {
+        "definition": "Run P/E model on specific companies",
+        "action": run_dcf_model
+    },
+    5: {
         "definition": "Show last runs details",
         "action": get_last_runs_details
     },
-    5: {
+    6: {
         "definition": "Show runs details ordered by yield",
         "action": get_runs_details_order_by_yield
     },
-    6: {
+    7: {
         "definition": "Show runs details of specific company",
         "action": get_runs_details_by_company
     },
-    7: {
+    8: {
         "definition": "Exit"
     }
 }
 
-EXIT_COMMAND = 7
+EXIT_COMMAND = COMMANDS.keys()[-1]

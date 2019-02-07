@@ -7,7 +7,7 @@ import logging
 
 class DCFModel(ValuationModel):
 
-    def __init__(self, simfin_id ,years_to_project = 10):
+    def __init__(self, simfin_id, years_to_project = 10):
         super().__init__(simfin_id)
         self.logger = logging.getLogger('app.dcf')
         self.company_name = ""

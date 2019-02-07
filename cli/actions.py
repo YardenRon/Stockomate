@@ -91,6 +91,36 @@ def run_pe_model():
         logger.debug("Finished running P/E model on companies (in %s seconds)"
                      % (time.time() - start_time))
 
+def run_dcf_model():
+    print("Please choose one of the following options:")
+    print("id1, id2, id3... - write the companies ids in one line, comma separated")
+    print("* - Take predefined companies ids from a config file")
+    print("# - Return to the main menu")
+
+    user_input = input()
+
+    if user_input == '#':
+        return
+    if user_input == '*':
+        companies_ids = PREDEFINED_COMPANIES_IDS
+    else:
+        companies_ids = __parse_ids_string(user_input)
+
+    if not companies_ids:
+        print("No valid ids were found")
+    else:
+        companies_ids_string = ','.join(map(str, companies_ids))
+        logger.debug("Running DCF model for the companies with the following ids = [%s]",
+                     companies_ids_string)
+        start_time = time.time()
+
+        for company_id in companies_ids:
+            model = DCFModel(company_id)
+            model.run()
+
+        logger.debug("Finished running DCF model on companies (in %s seconds)"
+                     % (time.time() - start_time))
+
 def get_last_runs_details():
     runs_details = db.get_last_runs_details()
     print_table(runs_details)

@@ -34,4 +34,4 @@ COMMANDS = {
     }
 }
 
-EXIT_COMMAND = COMMANDS.keys()[-1]
+EXIT_COMMAND = list(COMMANDS.keys())[-1]

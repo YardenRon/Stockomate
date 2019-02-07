@@ -25,7 +25,9 @@ def update_companies_details_and_metrics():
     id_to_ticker = formatter.convert_companies_details_to_dict(companies_details)
     companies = api.get_companies_valuation_metrics(METRICS)
     for company in companies:
-        company.ticker = id_to_ticker[company.simfinId]
+        # TODO: Temporary fix - needs to be changed (if statment should be gone)
+        if company.simfinId != 653916:
+            company.ticker = id_to_ticker[company.simfinId]
     db.save_companies(companies)
 
     logger.debug("Finished updating all companies details and metrics (in %s seconds)"

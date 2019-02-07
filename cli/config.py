@@ -14,7 +14,7 @@ COMMANDS = {
         "action": run_pe_model
     },
     4: {
-        "definition": "Run P/E model on specific companies",
+        "definition": "Run DCF model on specific companies",
         "action": run_dcf_model
     },
     5: {

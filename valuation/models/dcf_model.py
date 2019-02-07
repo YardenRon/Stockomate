@@ -120,7 +120,7 @@ class DCFModel(ValuationModel):
         inputs = [
             ModelInput(name="Cash and Cash Equivalents - Last Statement", value=round(cce,2)),
             ModelInput(name="Long Term Debt - Last Statement", value=round(ltd,2)),
-            ModelInput(name="Free Cash Value - Last Statement", value=round(fcf, 2)),
+            ModelInput(name="Free Cash Flow - Last Statement", value=round(fcf, 2)),
             ModelInput(name="Shares Outstanding - Current", value=round(shares_num, 2)),
             ModelInput(name="Expected Growth Rate - Next 5 years", value=round(egr,2)),
             ModelInput(name="Growth Decline Rate", value=round(gdr,2)),

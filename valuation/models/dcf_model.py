@@ -1,6 +1,7 @@
 from .valuation_model import ValuationModel
 from ..data_extractor import *
 from scraper.yahoo_scraper import YahooScraper
+from ..config import *
 import datetime
 import logging
 
@@ -10,25 +11,83 @@ class DCFModel(ValuationModel):
         super().__init__(simfin_id)
         self.logger = logging.getLogger('app.dcf')
         self.company_name = ""
+        self.free_cash_flow = 1
+        self.cash_and_cash_equivalents = 1
+        self.long_term_debt = 1
         self.expected_growth_rate = 1
+        self.shares_outstanding = 1
         self.years_to_project = years_to_project
         self.prepare_model_input(self.company_id)
 
     def prepare_model_input(self, company_id):
         self.logger.debug("Preparing DCF model inputs for company [%d]", self.company_id)
         company = get_company_from_db(company_id)
+        self.company_name = company.name
+        self.free_cash_flow = self.__get_free_cash_flow(company)
+        self.cash_and_cash_equivalents = self.__get_cash_and_cash_equivalents(company)
+        self.long_term_debt = self.__get_long_term_debt(company)
+        self.shares_outstanding = self.__get_shares_outstanding(company)
         self.expected_growth_rate = self.__get_expected_growth_rate(company.ticker)
+
+    # TODO: Refactor duplicated code (unite similar functions)
+
+    def __get_free_cash_flow(self, company_details):
+        return list(filter(lambda metric: metric.name == "Free Cash Flow",
+                           company_details.metrics_values))[0]
+
+    def __get_cash_and_cash_equivalents(self, company_details):
+        return list(filter(lambda metric: metric.name == "Cash and Cash-equivalents",
+                           company_details.metrics_values))[0]
+
+    def __get_long_term_debt(self, company_details):
+        return list(filter(lambda metric: metric.name == "Non-current Debt",
+                           company_details.metrics_values))[0]
 
     def __get_expected_growth_rate(self, ticker):
         scraper = YahooScraper()
         return scraper.get_company_expected_growth_rate(ticker)
 
+    def __get_shares_outstanding(self, company_details):
+        return list(filter(lambda metric: metric.name == "Common Shares Outstanding",
+                           company_details.metrics_values))[0]
+
     def run(self):
         self.logger.debug("Running DCF model algorithm on company [%d]", self.company_id)
-        result = 1
-        self.logger.debug("DCF model algorithm on company [%d] result=%f", self.company_id, npv)
-        self.save_run_details_to_db()
-        return result
+        conservative_growth_rate = self.expected_growth_rate * (1 - MARGIN_OF_SAFETY)
+        # Returns an array of FCF values over the years
+        future_fcf_values = self.__project_fcf_to_future(self.free_cash_flow,
+                                                  conservative_growth_rate,
+                                                  self.years_to_project)
+        # Returns array of NPV of the above values
+        npv_fcf_values = self.__calculate_npv_fcf(future_fcf_values, self.years_to_project)
+        total_npv_fcf = sum(npv_fcf_values)
+        last_year_mutiplied_fcf = total_npv_fcf[self.years_to_project-1] * LAST_YEAR_FCF_MULTIPLIER
+        company_value = total_npv_fcf + last_year_mutiplied_fcf \
+                        + self.cash_and_cash_equivalents - self.long_term_debt
+        intrinsic_value = company_value / self.shares_outstanding
+        self.logger.debug("DCF model algorithm on company [%d] result=%f",
+                          self.company_id, intrinsic_value)
+        # self.save_run_details_to_db()
+        return intrinsic_value
+
+    # TODO: Think maybe to unite __project_fcf_to_future and __calculate_npv_fcf
+
+    def __project_fcf_to_future(self, free_cash_flow, conservative_growth_rate, years_to_project):
+        fcf_in_future_years = []
+        fcf_growth = free_cash_flow
+        for year in range(1, years_to_project+1):
+            declined_conservative_growth_rate = \
+                conservative_growth_rate* pow(1-GROWTH_DECLINE_RATE, year-1)
+            fcf_growth *= (1+declined_conservative_growth_rate)
+            fcf_in_future_years.append(fcf_growth)
+        return fcf_in_future_years
+
+    def __calculate_npv_fcf(self, future_fcf_values, years_to_project):
+        npv_fcf_in_future_years = []
+        for year in range(1, years_to_project+1):
+            npv_fcf = future_fcf_values[year-1] / pow(1+DISCOUNT_RATE, year)
+            npv_fcf_in_future_years.append(npv_fcf)
+        return npv_fcf_in_future_years
 
     # TODO: Refactor functions with a lot of arguments
 

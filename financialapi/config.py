@@ -34,5 +34,29 @@ DATA_TO_RETRIEVE = [
     {
         "indicator": "Non-current Debt",
         "period": "TTM"
+    },
+    {
+        "indicator": "Return on Equity",
+        "period": "TTM"
+    },
+    {
+        "indicator": "Return on Equity",
+        "period": "TTM-1"
+    },
+    {
+        "indicator": "Return on Equity",
+        "period": "TTM-2"
+    },
+    {
+        "indicator": "Return on Equity",
+        "period": "TTM-3"
+    },
+    {
+        "indicator": "Return on Equity",
+        "period": "TTM-4"
+    },
+    {
+        "indicator": "Total Equity",
+        "period": "TTM"
     }
 ]

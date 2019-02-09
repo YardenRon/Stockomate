@@ -18,18 +18,22 @@ COMMANDS = {
         "action": run_dcf_model
     },
     5: {
+        "definition": "Run ROE model on specific companies",
+        "action": run_roe_model
+    },
+    6: {
         "definition": "Show last runs details",
         "action": get_last_runs_details
     },
-    6: {
+    7: {
         "definition": "Show runs details ordered by yield",
         "action": get_runs_details_order_by_yield
     },
-    7: {
+    8: {
         "definition": "Show runs details of specific company",
         "action": get_runs_details_by_company
     },
-    8: {
+    9: {
         "definition": "Exit"
     }
 }

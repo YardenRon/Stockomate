@@ -6,7 +6,7 @@ class ValuationModel(ABC):
         self.company_id = simfin_id
 
     @abstractmethod
-    def prepare_model_input(self):
+    def prepare_model_input(self, *args):
         pass
 
     @abstractmethod

@@ -67,14 +67,14 @@ class YahooScraper:
     def __extract_payout_ratio_from_html(self, html):
         parser = BeautifulSoup(html, 'html.parser')
         # Not so good practice - may be fragile
-        egr_string = parser.find_all("td", class_="Ta(end) Py(10px)")[16].get_text()
-        return float(egr_string.strip('%'))/100
+        pr_string = parser.find_all("td", class_="Fz(s) Fw(500) Ta(end)")[54].get_text()
+        return float(pr_string.strip('%'))/100
 
     def __extract_forward_dividend_yield_from_html(self, html):
         parser = BeautifulSoup(html, 'html.parser')
         # Not so good practice - may be fragile
-        egr_string = parser.find_all("td", class_="Ta(end) Py(10px)")[16].get_text()
-        return float(egr_string.strip('%'))/100
+        fdy_string = parser.find_all("td", class_="Fz(s) Fw(500) Ta(end)")[50].get_text()
+        return float(fdy_string.strip('%'))/100
 
     def __add_param_to_url(self, param, value):
         if param is not None:

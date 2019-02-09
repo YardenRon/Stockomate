@@ -2,6 +2,7 @@ from .valuation_model import ValuationModel
 from ..data_extractor import *
 from scraper.yahoo_scraper import YahooScraper
 from ..config import *
+import datetime
 import logging
 
 class ROEModel(ValuationModel):
@@ -80,7 +81,11 @@ class ROEModel(ValuationModel):
         intrinsic_value = npv_required_value + sum_npv_dividends
         self.logger.debug("ROE model algorithm on company [%d] result=%f",
                           self.company_id, intrinsic_value)
-        self.save_run_details_to_db()
+        self.save_run_details_to_db(self.company_id, self.company_name, intrinsic_value,
+                                    self.current_price, avg_roe, self.shareholders_equity,
+                                    self.payout_ratio, self.dividend_yield, self.shares_outstanding,
+                                    sustainable_growth_rate, MARGIN_OF_SAFETY, DISCOUNT_RATE,
+                                    GROWTH_DECLINE_RATE, self.years_back)
 
     def __calculate_avg_historical_roe(self, return_on_equity, years_back):
         sum_roe = 0
@@ -111,5 +116,35 @@ class ROEModel(ValuationModel):
             npv_dividend_in_future_years.append(npv_dividend)
         return npv_dividend_in_future_years
 
-    def save_run_details_to_db(self, *args):
-        pass
+    # TODO: Refactor functions with a lot of arguments
+
+    def save_run_details_to_db(self, company_id, company_name, result, current_price,
+                               avg_roe, se, pr, fdy, shares_num, sgr, mos, dr, gdr, years_back):
+        model_inputs = self.__create_inputs_object(avg_roe, se, pr, fdy, shares_num,
+                                                   sgr, mos, dr, gdr, years_back)
+        run_details = self.__create_run_details_object(company_id, company_name,
+                                                       model_inputs, result, current_price)
+        db.save_run_details(run_details)
+
+    def __create_run_details_object(self, company_id, company_name, inputs, result, current_price):
+        run = Run(company_id=company_id, company_name=company_name, inputs=inputs,
+                  model_result=round(result,2), current_price=round(current_price,2))
+        run.model = "ROE model"
+        run.possible_yield = round((result-current_price)/current_price*100,2)
+        run.timestamp = datetime.datetime.now()
+        return run
+
+    def __create_inputs_object(self, avg_roe, se, pr, fdy, shares_num,
+                               sgr, mos, dr, gdr, years_back):
+        inputs = [
+            ModelInput(name="Avg Historical ROE - %s years back" % years_back, value=round(avg_roe, 2)),
+            ModelInput(name="Total Stockholders Equity - Last Statement", value=round(se,2)),
+            ModelInput(name="Dividend Payout Ratio - TTM", value=round(pr,2)),
+            ModelInput(name="Forward Annual Dividend Yield - TTM", value=round(fdy, 2)),
+            ModelInput(name="Shares Outstanding - Current", value=round(shares_num, 2)),
+            ModelInput(name="Sustainable Growth Rate", value=round(sgr, 2)),
+            ModelInput(name="Growth Decline Rate", value=round(gdr,2)),
+            ModelInput(name="Margin of Safety", value=round(mos,2)),
+            ModelInput(name="Discount Rate", value=round(dr,2))
+        ]
+        return inputs

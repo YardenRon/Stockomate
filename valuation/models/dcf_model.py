@@ -64,8 +64,8 @@ class DCFModel(ValuationModel):
         # Returns array of NPV of the above values
         npv_fcf_values = self.__calculate_npv_fcf(future_fcf_values, self.years_to_project)
         total_npv_fcf = sum(npv_fcf_values)
-        last_year_mutiplied_fcf = npv_fcf_values[self.years_to_project-1] * LAST_YEAR_FCF_MULTIPLIER
-        company_value = total_npv_fcf + last_year_mutiplied_fcf \
+        last_year_multiplied_fcf = npv_fcf_values[self.years_to_project-1] * LAST_YEAR_FCF_MULTIPLIER
+        company_value = total_npv_fcf + last_year_multiplied_fcf \
                         + self.cash_and_cash_equivalents - self.long_term_debt
         intrinsic_value = company_value / self.shares_outstanding
         self.logger.debug("DCF model algorithm on company [%d] result=%f",

@@ -1,6 +1,7 @@
 from .valuation_model import ValuationModel
 from ..data_extractor import *
 from scraper.yahoo_scraper import YahooScraper
+from ..config import *
 import logging
 
 class ROEModel(ValuationModel):
@@ -56,7 +57,59 @@ class ROEModel(ValuationModel):
         return scraper.get_company_dividends_details(ticker)
 
     def run(self):
-        pass
+        self.logger.debug("Running ROE model algorithm on company [%d]", self.company_id)
+        avg_roe = self.__calculate_avg_historical_roe(self.return_on_equity, self.years_back)
+        sustainable_growth_rate = avg_roe * (1-self.payout_ratio)
+        conservative_growth_rate = sustainable_growth_rate * (1 - MARGIN_OF_SAFETY)
+        equity_per_share = self.shareholders_equity / self.shares_outstanding
+        future_shareholders_equity = \
+            self.__project_shareholders_equity_to_future(equity_per_share,
+                                                         conservative_growth_rate,
+                                                         self.years_to_project)
+        dividend = self.current_price * self.dividend_yield
+        # Returns an array of dividends values over the years
+        future_dividend_values = self.__project_dividend_to_future(dividend,
+                                                                   conservative_growth_rate,
+                                                                   self.years_to_project)
+        # Returns array of NPV of the above values
+        npv_dividend_values = self.__calculate_npv_dividend(future_dividend_values, self.years_to_project)
+        last_year_net_income = future_shareholders_equity * avg_roe
+        required_value = last_year_net_income / DISCOUNT_RATE
+        npv_required_value = required_value / pow(1+DISCOUNT_RATE, self.years_to_project)
+        sum_npv_dividends = sum(npv_dividend_values)
+        intrinsic_value = npv_required_value + sum_npv_dividends
+        self.logger.debug("ROE model algorithm on company [%d] result=%f",
+                          self.company_id, intrinsic_value)
+        self.save_run_details_to_db()
+
+    def __calculate_avg_historical_roe(self, return_on_equity, years_back):
+        sum_roe = 0
+        for year in range(years_back):
+            sum_roe += return_on_equity[year].value
+        return sum_roe/years_back
+
+    def __project_shareholders_equity_to_future(self, current_equity,
+                                                conservative_growth_rate, years_ahead):
+        equity_growth = current_equity
+        for year in range(1, years_ahead+1):
+            equity_growth *= (1+conservative_growth_rate)
+        return equity_growth
+
+    def __project_dividend_to_future(self, current_dividend,
+                                     conservative_growth_rate, years_to_project):
+        dividend_in_future_years = []
+        dividend_growth = current_dividend
+        for year in range(1, years_to_project+1):
+            dividend_growth *= (1+conservative_growth_rate)
+            dividend_in_future_years.append(dividend_growth)
+        return dividend_in_future_years
+
+    def __calculate_npv_dividend(self, future_dividend_values, years_to_project):
+        npv_dividend_in_future_years = []
+        for year in range(1, years_to_project+1):
+            npv_dividend = future_dividend_values[year-1] / pow(1+DISCOUNT_RATE, year-1)
+            npv_dividend_in_future_years.append(npv_dividend)
+        return npv_dividend_in_future_years
 
     def save_run_details_to_db(self, *args):
         pass

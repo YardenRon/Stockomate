@@ -54,3 +54,9 @@ class ROEModel(ValuationModel):
     def __get_dividends_details(self, ticker):
         scraper = YahooScraper()
         return scraper.get_company_dividends_details(ticker)
+
+    def run(self):
+        pass
+
+    def save_run_details_to_db(self, *args):
+        pass

@@ -34,6 +34,8 @@ class YahooScraper:
         parser = BeautifulSoup(html, 'html.parser')
         # Not so good practice - may be fragile
         egr_string = parser.find_all("td", class_="Ta(end) Py(10px)")[16].get_text()
+        if '%' not in egr_string:
+            return 0
         return float(egr_string.strip('%'))/100
 
 
@@ -68,18 +70,21 @@ class YahooScraper:
         parser = BeautifulSoup(html, 'html.parser')
         # Not so good practice - may be fragile
         pr_string = parser.find_all("td", class_="Fz(s) Fw(500) Ta(end)")[54].get_text()
+        if '%' not in pr_string:
+            return 0
         return float(pr_string.strip('%'))/100
 
     def __extract_forward_dividend_yield_from_html(self, html):
         parser = BeautifulSoup(html, 'html.parser')
         # Not so good practice - may be fragile
         fdy_string = parser.find_all("td", class_="Fz(s) Fw(500) Ta(end)")[50].get_text()
+        if '%' not in fdy_string:
+            return 0
         return float(fdy_string.strip('%'))/100
 
     def __add_param_to_url(self, param, value):
         if param is not None:
             session.params[param] = value
-
 
     def __remove_param_from_url(self, param):
         if param is not None:

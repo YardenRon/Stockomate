@@ -33,3 +33,16 @@ class MongoDB:
 
     def get_last_runs_details(self):
         return Run.objects.order_by('-timestamp')[:10]
+
+    def get_runs_details_ordered_by_avg_yield(self):
+        return Run.objects.aggregate({
+            '$group': {
+                '_id': { 'company_id': "$company_id", 'company_name': '$company_name'},
+                'avg_yield': { '$avg': "$possible_yield" }
+            }
+        },
+        {
+            '$sort': {
+                'avg_yield': -1
+            }
+        })

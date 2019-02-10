@@ -34,6 +34,10 @@ COMMANDS = {
         "action": get_runs_details_by_company
     },
     9: {
+        "definition": "Show average yield of companies (ordered)",
+        "action": get_avg_yield_grouped_by_company
+    },
+    10: {
         "definition": "Exit"
     }
 }

@@ -155,11 +155,11 @@ def run_roe_model():
 
 def get_last_runs_details():
     runs_details = db.get_last_runs_details()
-    print_table(runs_details)
+    print_default_table(runs_details)
 
 def get_runs_details_order_by_yield():
     runs_details = db.get_all_runs_details_ordered_by_yield()
-    print_table(runs_details)
+    print_default_table(runs_details)
 
 def get_runs_details_by_company():
     print("Please write the company id you wish to view:")
@@ -170,7 +170,11 @@ def get_runs_details_by_company():
     else:
         company_id = int(user_input)
         runs_details = db.get_company_runs_details(company_id)
-        print_table(runs_details)
+        print_default_table(runs_details)
+
+def get_avg_yield_grouped_by_company():
+    runs_details = db.get_runs_details_ordered_by_avg_yield()
+    print_avg_yield_table(runs_details)
 
 def __parse_ids_string(string):
     return [int(_id) for _id in string.split(',') if _id.strip().isdigit()]

@@ -2,6 +2,7 @@ from financialapi import FinancialApi, DATA_TO_RETRIEVE as METRICS
 from dal import *
 from utils.formatter import Formatter
 from valuation import *
+from utils import ApiError, MissingDataError
 from .config import *
 from .runs_viewer import *
 import time
@@ -58,8 +59,12 @@ def update_companies_prices():
         start_time = time.time()
 
         for company_id in companies_ids:
-            company_prices = api.get_company_share_prices(company_id)
-            db.save_company_prices(company_prices)
+            try:
+                company_prices = api.get_company_share_prices(company_id)
+                db.save_company_prices(company_prices)
+            except ApiError:
+                # If there was an API error - we skip retrieving this company prices
+                continue
 
         logger.debug("Finished updating companies prices (in %s seconds)"
                      % (time.time() - start_time))
@@ -88,8 +93,14 @@ def run_pe_model():
         start_time = time.time()
 
         for company_id in companies_ids:
-            model = PEModel(company_id)
-            model.run()
+            try:
+                model = PEModel(company_id)
+                model.run()
+            except MissingDataError:
+                # If a data was missing - we skip retrieving this company prices
+                print("MissingDataError")
+            except CompanyPrices.DoesNotExist:
+                print("DoesNotExist")
 
         logger.debug("Finished running P/E model on companies (in %s seconds)"
                      % (time.time() - start_time))
@@ -118,8 +129,12 @@ def run_dcf_model():
         start_time = time.time()
 
         for company_id in companies_ids:
-            model = DCFModel(company_id)
-            model.run()
+            try:
+                model = DCFModel(company_id)
+                model.run()
+            except MissingDataError:
+                # If a price was missing - we skip retrieving this company prices
+                continue
 
         logger.debug("Finished running DCF model on companies (in %s seconds)"
                      % (time.time() - start_time))
@@ -148,8 +163,12 @@ def run_roe_model():
         start_time = time.time()
 
         for company_id in companies_ids:
-            model = ROEModel(company_id)
-            model.run()
+            try:
+                model = ROEModel(company_id)
+                model.run()
+            except MissingDataError:
+                # If a price was missing - we skip retrieving this company prices
+                continue
 
         logger.debug("Finished running ROE model on companies (in %s seconds)"
                      % (time.time() - start_time))

@@ -2,6 +2,7 @@ from .valuation_model import ValuationModel
 from ..data_extractor import *
 from dal import ModelInput, Run
 from scraper.yahoo_scraper import YahooScraper
+from utils import MissingDataError
 from ..config import *
 import datetime
 import logging
@@ -24,10 +25,13 @@ class PEModel(ValuationModel):
         company_prices = get_company_prices_from_db(company_id)
         self.company_name = company.name
         self.earnings_per_share = self.__get_earnings_per_share(company, years_back)
-        self.price_per_share = self.__get_price_per_share(company_prices,
-                                                          company.last_updated,
-                                                          years_back)
-        self.expected_growth_rate = self.__get_expected_growth_rate(company.ticker)
+        self.price_per_share = self.__get_price_per_share(company_prices, years_back)
+        self.__check_for_missing_data(self.price_per_share, self.earnings_per_share,
+                                      self.company_id, company.name)
+        try:
+            self.expected_growth_rate = self.__get_expected_growth_rate(company.ticker)
+        except Exception:
+            raise MissingDataError(self.company_id, company.name, "EGR")
 
     def __get_earnings_per_share(self, company_details, years_back):
         periods = self.__create_periods_array(years_back)
@@ -40,16 +44,14 @@ class PEModel(ValuationModel):
             periods.append("TTM-%d" % year)
         return periods
 
-    def __get_price_per_share(self, company_prices, company_last_updated, years_back):
-        last_years_dates = self.__get_last_years_dates(company_last_updated, years_back)
+    def __get_price_per_share(self, company_prices, years_back):
+        company_last_price_record_date = company_prices.prices[0].date
+        last_years_dates = self.__get_last_years_dates(company_last_price_record_date, years_back)
         return list(filter(lambda price_and_date: price_and_date.date in last_years_dates,
                            company_prices.prices))
 
     def __get_last_years_dates(self, current_date, years_back):
         cleared_current_date = current_date.replace(hour=0, minute=0, second=0, microsecond=0)
-        cleared_current_date = self.__change_weekend_to_middle_of_week(cleared_current_date, -3)
-        if cleared_current_date.date() == datetime.datetime.today().date():
-            cleared_current_date = cleared_current_date - datetime.timedelta(days=1)
         last_years_dates = [cleared_current_date]
 
         for year in range(1, years_back):
@@ -65,6 +67,13 @@ class PEModel(ValuationModel):
             date = date + datetime.timedelta(days=days_delta)
         return date
 
+    def __check_for_missing_data(self, price_per_share, earnings_per_share,
+                                 company_id, company_name):
+        if len(price_per_share) != len(earnings_per_share):
+            raise MissingDataError(company_id, company_name, "Price")
+        for year in range(len(earnings_per_share)):
+            if earnings_per_share[year].value is None:
+                raise MissingDataError(company_id, company_name, "EPS")
 
     def __get_expected_growth_rate(self, ticker):
         scraper = YahooScraper()

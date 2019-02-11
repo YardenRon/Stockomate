@@ -1,6 +1,7 @@
 from .valuation_model import ValuationModel
 from ..data_extractor import *
 from scraper.yahoo_scraper import YahooScraper
+from utils import MissingDataError
 from ..config import *
 import datetime
 import logging
@@ -25,6 +26,8 @@ class ROEModel(ValuationModel):
         self.logger.debug("Preparing ROE model inputs for company [%d]", self.company_id)
         company = get_company_from_db(company_id)
         company_prices = get_company_prices_from_db(company_id)
+        if company_prices is None or len(company_prices) == 0:
+            raise MissingDataError(company_id, company.name, "Price")
         self.company_name = company.name
         self.current_price = company_prices.prices[0].price
         self.shareholders_equity = self.__get_shareholders_equity(company)

@@ -34,8 +34,6 @@ class YahooScraper:
         parser = BeautifulSoup(html, 'html.parser')
         # Not so good practice - may be fragile
         egr_string = parser.find_all("td", class_="Ta(end) Py(10px)")[16].get_text()
-        if '%' not in egr_string:
-            return 0
         return float(egr_string.strip('%'))/100
 
 

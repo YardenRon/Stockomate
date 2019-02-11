@@ -1,4 +1,4 @@
-from utils.logger import logger
+from utils import logger
 
 class ApiError(Exception):
 

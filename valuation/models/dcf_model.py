@@ -25,15 +25,18 @@ class DCFModel(ValuationModel):
         self.logger.debug("Preparing DCF model inputs for company [%d]", self.company_id)
         company = get_company_from_db(company_id)
         company_prices = get_company_prices_from_db(company_id)
-        if company_prices is None or len(company_prices) == 0:
-            raise MissingDataError(company_id, company.name, "Price")
         self.company_name = company.name
         self.current_price = company_prices.prices[0].price
         self.free_cash_flow = self.__get_free_cash_flow(company)
         self.cash_and_cash_equivalents = self.__get_cash_and_cash_equivalents(company)
         self.long_term_debt = self.__get_long_term_debt(company)
         self.shares_outstanding = self.__get_shares_outstanding(company)
-        self.expected_growth_rate = self.__get_expected_growth_rate(company.ticker)
+        self.__check_for_missing_data(company_prices, self.free_cash_flow,
+                                      self.shares_outstanding, self.company_id, company.name)
+        try:
+            self.expected_growth_rate = self.__get_expected_growth_rate(company.ticker)
+        except Exception:
+            raise MissingDataError(self.company_id, company.name, "EGR")
 
     # TODO: Refactor duplicated code (unite similar functions)
 
@@ -56,6 +59,15 @@ class DCFModel(ValuationModel):
     def __get_shares_outstanding(self, company_details):
         return list(filter(lambda metric: metric.name == "Common Shares Outstanding",
                            company_details.metrics_values))[0].value
+
+    def __check_for_missing_data(self, company_prices, free_cash_flow, shares_outstanding,
+                                 company_id, company_name):
+        if company_prices is None or len(company_prices) == 0:
+            raise MissingDataError(company_id, company_name, "Price")
+        if free_cash_flow is None:
+            raise MissingDataError(company_id, company_name, "FCF")
+        if shares_outstanding is None:
+            raise MissingDataError(company_id, company_name, "Shares Outstanding")
 
     def run(self):
         self.logger.debug("Running DCF model algorithm on company [%d]", self.company_id)

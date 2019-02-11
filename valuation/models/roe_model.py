@@ -26,16 +26,19 @@ class ROEModel(ValuationModel):
         self.logger.debug("Preparing ROE model inputs for company [%d]", self.company_id)
         company = get_company_from_db(company_id)
         company_prices = get_company_prices_from_db(company_id)
-        if company_prices is None or len(company_prices) == 0:
-            raise MissingDataError(company_id, company.name, "Price")
         self.company_name = company.name
         self.current_price = company_prices.prices[0].price
         self.shareholders_equity = self.__get_shareholders_equity(company)
         self.return_on_equity = self.__get_return_on_equity(company, years_back)
         self.shares_outstanding = self.__get_shares_outstanding(company)
-        dividends_details = self.__get_dividends_details(company.ticker)
-        self.dividend_yield = dividends_details["Forward Dividend Yield"]
-        self.payout_ratio = dividends_details["Payout Ratio"]
+        self.__check_for_missing_data(self.return_on_equity, self.shares_outstanding,
+                                      self.company_id, company.name)
+        try:
+            dividends_details = self.__get_dividends_details(company.ticker)
+            self.dividend_yield = dividends_details["Forward Dividend Yield"]
+            self.payout_ratio = dividends_details["Payout Ratio"]
+        except Exception:
+            raise MissingDataError(self.company_id, company.name, "Dividends Details")
 
     def __get_shareholders_equity(self, company_details):
         return list(filter(lambda metric: metric.name == "Total Equity",
@@ -59,6 +62,13 @@ class ROEModel(ValuationModel):
     def __get_dividends_details(self, ticker):
         scraper = YahooScraper()
         return scraper.get_company_dividends_details(ticker)
+
+    def __check_for_missing_data(self, return_on_equity, shares_outstanding, company_id, company_name):
+        if shares_outstanding is None:
+            raise MissingDataError(company_id, company_name, "Shares Outstanding")
+        for year in range(len(return_on_equity)):
+            if return_on_equity[year].value is None:
+                raise MissingDataError(company_id, company_name, "ROE")
 
     def run(self):
         self.logger.debug("Running ROE model algorithm on company [%d]", self.company_id)
